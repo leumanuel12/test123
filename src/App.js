@@ -3,13 +3,15 @@ import "./index.css";
 import Employee from "./components/Employee";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import AddEmployee from "./components/AddEmployee";
+import EditEmployee from "./components/EditEmployee";
 
 function App() {
   const [employees, setEmployees] = useState([
     {
       id: 1,
       name: "Cardo Dalisay",
-      role: "Probinsiyano",
+      role: "Probinsyano",
       img: "https://pbs.twimg.com/media/EXayM80U4AAst8O?format=jpg&name=small",
     },
     {
@@ -23,20 +25,32 @@ function App() {
       name: "Victor Magtanggol",
       role: "Thor ng Pinas",
       img: "https://pbs.twimg.com/media/DwgnMcSVAAA0afZ?format=jpg&name=large",
-    }
+    },
   ]);
 
-  function updateEmployee(id, newName, newRole){
+  function updateEmployee(id, newName, newRole) {
     //console.log(id, newName, newRole);
-    const updatedEmployees = employees.map( (employee) => {
-      if( id == employee.id ){
-        return {...employee, name: newName, role: newRole}
+    const updatedEmployees = employees.map((employee) => {
+      if (id == employee.id) {
+        return { ...employee, name: newName, role: newRole };
       }
 
       return employee;
-
-    } );
+    });
     setEmployees(updatedEmployees);
+  }
+
+  function newEmployee(name, role, img) {
+    console.log("newEmployee function executing...");
+    console.log(name, role, img);
+    const newEmployee = {
+      id: uuidv4(),
+      name: name,
+      role: role,
+      img: img,
+    };
+
+    setEmployees([...employees, newEmployee]);
   }
 
   return (
@@ -44,19 +58,30 @@ function App() {
       <div className="flex flex-wrap pt-10 justify-center">
         {employees.map((employee) => {
           //console.log(employee);
+
+          const editEmployee = ( //custom Edit Employee component for easy calling
+            <EditEmployee
+              id={employee.id}
+              name={employee.name}
+              role={employee.role}
+              updateEmployee={updateEmployee}
+            />
+          );
+
           return (
             <Employee
               //key={uuidv4()}
-              key={employee.id}
+              key={employee.id}  //display employees
               id={employee.id}
               name={employee.name}
               role={employee.role}
               img={employee.img}
-              updateEmployee={updateEmployee}
+              editEmployee={editEmployee}
             />
           );
         })}
       </div>
+      <AddEmployee newEmployee={newEmployee} />
     </div>
   );
 }
