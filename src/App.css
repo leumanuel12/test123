@@ -1,9 +1,6 @@
-.norole{
-  color: #f00;
-}
-.role{
-  color:#00f;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /*.App {
   text-align: center;
