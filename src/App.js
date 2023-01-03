@@ -5,6 +5,7 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import AddEmployee from "./components/AddEmployee";
 import EditEmployee from "./components/EditEmployee";
+import Header from "./components/Header";
 
 function App() {
   const [employees, setEmployees] = useState([
@@ -55,6 +56,9 @@ function App() {
 
   return (
     <div className="App">
+
+      <Header/>
+
       <div className="flex flex-wrap pt-10 justify-center">
         {employees.map((employee) => {
           //console.log(employee);
