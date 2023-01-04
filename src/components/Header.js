@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 const navigation = [
   { name: "Employees", href: "/Employees" },
   { name: "Customers", href: "/Customers" },
-  { name: "About Us", href: "/AboutUs" },
+  { name: "Dictionary", href: "/Dictionary" },
   { name: "Contact Us", href: "/ContactUs" },
 ];
 
