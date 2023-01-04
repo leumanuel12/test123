@@ -18,7 +18,7 @@ function Employees() {
     {
       id: 2,
       name: "Narda Custodia",
-      role: "Darna mukaog bato",
+      role: "Tig kaon sa bato",
       img: "https://files.tempo.com.ph/wp-content/uploads/2022/08/20112154/Fah0DAbUcAIRTVG.jpg",
     },
     {
@@ -57,7 +57,10 @@ function Employees() {
   return (
     <div>
       <h3>Employees page</h3> 
-      <div className="pt-2 flex flex-wrap justify-center">
+
+      <AddEmployee newEmployee={newEmployee} />
+
+      <div className="pt-2 flex flex-wrap justify-center border-solid border-t-2 border-gray-300 pt-3 mt-3">
         {employees.map((employee) => {
           //console.log(employee);
 
@@ -83,7 +86,7 @@ function Employees() {
           );
         })}
       </div>
-      <AddEmployee newEmployee={newEmployee} />
+      
     </div>
   );
 }
