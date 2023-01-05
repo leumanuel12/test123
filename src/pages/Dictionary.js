@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Dictionary() {
   const [word, setWord] = useState("");
-  const [word2, setWord2] = useState("");
+  //const [word2, setWord2] = useState("");
+  const navigate = useNavigate();
 
+  /*
   useEffect(() => {
     console.log("State updated "+ word + ' ' + word2);
   });
@@ -22,19 +25,45 @@ export default function Dictionary() {
     console.log("State updated " + word2);
   }, [word2]);
   //this effect will only execute for word2 state only
+*/
 
   return (
     <>
-      <input
-        type="text"
-        onChange={(e) => {
-          //console.log(word);
-          setWord(e.target.value);
+      <h3 className="m-2 flex justify-center pb-3">Dictionary Search</h3>
+      <form
+        onSubmit={() => {
+          navigate("/definition/" + word);
         }}
-      />
-      <h3>Definition for {word}</h3>
+        className="flex justify-center space-x-2"
+      >
+        <input
+          type="text"
+          className="px-2 border-2 border-solid rounded-md border-purple-400"
+          onChange={(e) => {
+            //console.log(word);
+            setWord(e.target.value);
+          }}
+        />
+        <button className="bg-white-500 hover:bg-purple-700 text-purple-700 hover:text-white font-bold px-3 rounded border-2 border-solid border-purple-400">
+          Search
+        </button>
+      </form>
+    </>
+  );
+}
 
-      <input
+/*
+
+    <input
+      type="text"
+      onChange={(e) => {
+        //console.log(word);
+        setWord(e.target.value);
+      }}
+    />
+    <h3>Definition for {word}</h3>
+
+    <input
         type="text"
         className="mt-3"
         onChange={(e) => {
@@ -43,6 +72,4 @@ export default function Dictionary() {
         }}
       />
       <h3>Definition for {word}</h3>
-    </>
-  );
-}
+*/
