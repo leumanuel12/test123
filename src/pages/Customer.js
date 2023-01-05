@@ -1,15 +1,22 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { baseUrllocal8000 } from "../shared";
 
 export default function Customer() {
   const { id } = useParams();
   const [customer, setCustomer] = useState();
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    const url = "http://localhost:8000/api/customers/" + id;
+    const url = baseUrllocal8000 + "api/customers/" + id;
 
     fetch(url)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 404) {
+          setNotFound(true);
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log(data.customer);
         setCustomer(data.customer);
@@ -18,14 +25,20 @@ export default function Customer() {
 
   return (
     <>
-        {customer ? (
-          <div>
-            <p>{customer.id}</p>
-            <p>{customer.name}</p>
-            <p>{customer.industry}</p>
-          </div>
-        ) : null}
+      {notFound ? (
+        <h3 className="mx-auto m-4">
+          Customer with id="{id}" does not exist.
+        </h3>
+      ) : null}
 
+      {customer ? (
+        <div>
+          <p>{customer.id}</p>
+          <p>{customer.name}</p>
+          <p>{customer.industry}</p>
+        </div>
+      ) : null}
+      <Link to="/customers">go back</Link>
     </>
   );
 }
