@@ -20,15 +20,17 @@ export default function Customers() {
   return (
     <>
       <h3>Customers page</h3>
-      {customers
-        ? customers.map((customer) => {
-            return (
-              <p key={uuidv4()}>
-                <Link to={"/customers/" + customer.id}>{customer.name}</Link>
-              </p>
-            );
-          })
-        : null}
+      <ul className="m-3 p-3 rounded border-2 border-solid border-gray-300 w-[300px]">
+        {customers
+          ? customers.map((customer) => {
+              return (
+                <li key={uuidv4()}>
+                  <Link to={"/customers/" + customer.id} className="no-underline">{customer.name}</Link>
+                </li>
+              );
+            })
+          : null}{" "}
+      </ul>
     </>
   );
 }
