@@ -13,11 +13,12 @@ function App() {
     <BrowserRouter>
       <Header>
         <Routes>
-          <Route path="/employees" element={<Employees />} />
+          <Route path="/" element={<Dictionary />} />
           <Route path="/dictionary" element={<Dictionary />} />
-          <Route path="/definition/:search" element={<Definition />} />
+          <Route path="/dictionary/:search" element={<Definition />} />
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/employees" element={<Employees />} />
           <Route path="/customers" element={<Customers />} />
         </Routes>
       </Header>
