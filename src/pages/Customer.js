@@ -14,8 +14,15 @@ export default function Customer() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    console.log(customer);
-    console.log(tempCustomer);
+    //console.log(customer);
+    //console.log(tempCustomer);
+
+    //COMPARING DB DATA TO UI DATA
+    if (!customer) return;
+    let equal = true;
+    if (customer.name !== tempCustomer.name) equal=false;
+    if (customer.industry !== tempCustomer.industry) equal=false;
+    if (equal) setChanged(false);
   });
 
   useEffect(() => {
@@ -34,6 +41,7 @@ export default function Customer() {
         setTempCustomer(data.customer);
       });
   }, []);
+
 
   //TO DELETE A CUSTOMER
   function deleteCustomer() {
