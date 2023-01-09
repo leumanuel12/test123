@@ -1,12 +1,14 @@
 //import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
+import { LoginContext } from "../App";
 
 const navigation = [
+  { name: "Customers", href: "/Customers" },
   { name: "Dictionary", href: "/Dictionary" },
   { name: "Employees", href: "/Employees" },
-  { name: "Customers", href: "/Customers" },
 ];
 
 function classNames(...classes) {
@@ -14,6 +16,14 @@ function classNames(...classes) {
 }
 
 export default function Header(props) {
+  const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
+
+  /*function logout(){
+    localStorage.clear();
+    navigate('/login');
+  }*/
+
   return (
     <>
       <Disclosure as="nav" className="bg-purple-800">
@@ -67,13 +77,24 @@ export default function Header(props) {
                   </div>
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  <button
-                    type="button"
-                    className="hidden rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  >
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
+                  {loggedIn ? (
+                    <NavLink
+                      to={"/login"}
+                      onClick={() => {
+                        setLoggedIn(false);
+                      }}
+                      className="px-3 py-2 rounded-md text-sm font-medium no-underline text-white text-white hover:text-white hover:bg-purple-900"
+                    >
+                      Logout
+                    </NavLink>
+                  ) : (
+                    <NavLink
+                      to={"/login"}
+                      className="px-3 py-2 rounded-md text-sm font-medium no-underline text-white text-white hover:text-white hover:bg-purple-900"
+                    >
+                      Login
+                    </NavLink>
+                  )}
                 </div>
               </div>
             </div>
@@ -96,15 +117,33 @@ export default function Header(props) {
                     {item.name}
                   </NavLink>
                 ))}
+
+                {loggedIn ? (
+                  <NavLink
+                    to={"/login"}
+                    onClick={() => {
+                      //console.log('logging out...')
+                      setLoggedIn(false);
+                    }}
+                    className="no-underline block px-3 py-2 rounded-md text-base font-medium no-underline text-white hover:text-white hover:bg-purple-900"
+                  >
+                    Logout
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    to={"/login"}
+                    className="no-underline block px-3 py-2 rounded-md text-base font-medium no-underline text-white hover:text-white hover:bg-purple-900"
+                  >
+                    Login
+                  </NavLink>
+                )}
               </div>
             </Disclosure.Panel>
           </>
         )}
       </Disclosure>
       <div className="bg-gray-200 min-h-screen">
-        <div className="max-w-7xl mx-auto pt-4">
-          {props.children}
-        </div>
+        <div className="max-w-7xl mx-auto pt-4">{props.children}</div>
       </div>
     </>
   );
