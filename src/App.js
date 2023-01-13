@@ -11,6 +11,7 @@ import Customer from "./pages/Customer";
 import Login from "./pages/Login";
 import { createContext, useEffect, useState } from "react";
 import { baseUrllocal8000 } from "./shared";
+import Register from "./pages/Register";
 
 export const LoginContext = createContext();
 
@@ -88,6 +89,7 @@ function App() {
             <Route path="/customers/:id" element={<Customer />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </Header>
       </BrowserRouter>
