@@ -13,12 +13,17 @@ export default function Definition() {
   //const [error, setError] = useState(false);
 
   //custom hook
-  const [word, errorStatus] = useFetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + search);
+  const {request, data: [{meanings: word}] = [{}], errorStatus} = useFetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + search, {
+      mehod: 'GET',
+      headers: {
+        'Content-Type' : 'application/json'
+      }
+  });
 
   useEffect( () => {
     //console.log(word)
-    console.log(word?.[0].meanings)
-  } )
+    request();
+  }, [] )
 
   /*useEffect(() => {
     //console.log('state effect executed.');
@@ -92,7 +97,7 @@ export default function Definition() {
       </>
     );
   }
-
+  
   return (
     <>
       <DefinitionSearch />
@@ -106,8 +111,8 @@ export default function Definition() {
             :
           </b>
         </h4>
-        {word?.[0].meanings
-          ? word[0].meanings.map((meaning) => {
+        {word
+          ? word.map((meaning) => {
               return (
                 <div
                   key={uuidv4()}
@@ -122,6 +127,7 @@ export default function Definition() {
       </div>
     </>
   );
+  
 }
 
 /*

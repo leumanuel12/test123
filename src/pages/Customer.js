@@ -4,11 +4,12 @@ import { baseUrllocal8000 } from "../shared";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { LoginContext } from "../App";
+import useFetch from "../hooks/UseFetch";
 
 export default function Customer() {
   const { id } = useParams();
-  const [customer, setCustomer] = useState();
-  const [notFound, setNotFound] = useState(false);
+  //const [customer, setCustomer] = useState();
+  //const [notFound, setNotFound] = useState(false);
   const [tempCustomer, setTempCustomer] = useState();
   const [changed, setChanged] = useState(false);
   const [saved, setSaved] = useState("");
@@ -25,13 +26,50 @@ export default function Customer() {
 
     //COMPARING DB DATA TO UI DATA
     //it will hide the save buttons if the typed data didnt changed after editing
+
     if (!customer) return;
     let equal = true;
-    if (customer.name !== tempCustomer.name) equal = false;
-    if (customer.industry !== tempCustomer.industry) equal = false;
-    if (equal) setChanged(false);
+    if(tempCustomer){
+      if (customer.name !== tempCustomer.name) equal = false;
+      if (customer.industry !== tempCustomer.industry) equal = false;
+      if (equal) setChanged(false);
+    }
+
   });
 
+  const {request, deleteData, updateData, data: {customer} = {}, errorStatus, errorCode} = useFetch(baseUrllocal8000 + "api/customers/" + id, {
+    method: 'GET',
+    headers: {
+      'Content-Type' : 'application/json',
+      Authorization: "Bearer " + localStorage.getItem("access"),
+    }
+});
+
+useEffect( () => {
+  request();
+}, [] )
+
+useEffect( () => {
+  setTempCustomer(customer);
+  //console.log(customer)
+  //console.log(tempCustomer)
+}, [customer] )
+
+useEffect( () => {
+  //console.log("error status =",errorStatus)
+  if( errorCode ){
+    setError("400 - Bad request.");
+    setSaved(false);
+    console.log('bad request')
+  }
+  if( !errorCode && (errorCode !== undefined) ){
+    setSaved('Successfully saved!');
+    setError(false);
+  }
+
+} )
+
+  /*
   useEffect(() => {
     const url = baseUrllocal8000 + "api/customers/" + id;
 
@@ -66,9 +104,13 @@ export default function Customer() {
       });
   }, []);
 
+   */
+
   //TO DELETE A CUSTOMER
   function deleteCustomer() {
+    deleteData();
     //console.log("deleting customer");
+    /*
     const url = baseUrllocal8000 + "api/customers/" + id;
     fetch(url, {
       method: "DELETE",
@@ -88,10 +130,21 @@ export default function Customer() {
       .catch((e) => {
         console.log(e);
       });
+      */
   }
 
   //TO UPDATE THE CUSTOMER DETAILS
   function updateCustomer() {
+
+    updateData({...tempCustomer})
+
+    //console.log('saved?',saved)
+    //console.log('errorStatus=',errorStatus)
+    //console.log('customer=',customer)
+    //console.log('tempCustomer=',tempCustomer)
+    //console.log('changed?',changed)
+
+    /*
     const data = { ...tempCustomer };
     //const url = 'https://httpstat.us/500';
     const url = baseUrllocal8000 + "api/customers/" + id;
@@ -136,11 +189,13 @@ export default function Customer() {
       .catch((e) => {
         console.log(e);
       });
+      */
   }
 
+ 
   return (
     <>
-      {notFound ? (
+      {!customer ? (
         <h3 className="mx-auto m-4">Customer with id="{id}" does not exist.</h3>
       ) : (
         <button
@@ -153,13 +208,11 @@ export default function Customer() {
         </button>
       )}
 
-      {customer ? (
+      {customer && tempCustomer ? (
         <div className="max-w-md m-4 p-4 rounded border-2 border-solid border-gray-300">
-          {saved && !changed ? (
+          {!errorCode ? (
             <p className="text-green-500 font-bold">{saved}</p>
-          ) : null}
-
-          <p className="text-red-500 font-bold">{error}</p>
+          ) : <p className="text-red-500 font-bold">{error}</p>}
 
           <div className="md:flex md:items-center m-4">
             <div className="md:w-1/4">
@@ -227,7 +280,7 @@ export default function Customer() {
         </div>
       ) : null}
 
-      {!notFound ? (
+      {customer ? (
         <>
           <button
             className="m-2 bg-red-500 hover:bg-red-700 text-white font-bold px-3 rounded"
@@ -241,4 +294,5 @@ export default function Customer() {
       ) : null}
     </>
   );
+  
 }

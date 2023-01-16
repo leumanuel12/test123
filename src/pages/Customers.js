@@ -4,15 +4,24 @@ import { v4 as uuidv4 } from "uuid";
 import AddCustomer from "../components/AddCustomer";
 import { baseUrllocal8000 } from "../shared";
 import { LoginContext } from "../App";
+import useFetch from "../hooks/UseFetch";
 
 export default function Customers() {
   const [loggedIn, setLoggedIn] = useContext(LoginContext);
 
-  const [customers, setCustomers] = useState();
+  //const [customers, setCustomers] = useState();
   const [show, setShow] = useState(false);
   
-  const navigate = useNavigate();
-  const location = useLocation();
+  //const navigate = useNavigate();
+  //const location = useLocation();
+
+  const {request, appendData, data: { customer } = {}, errorStatus} = useFetch(baseUrllocal8000 + "api/customers/", {
+    method: 'GET',
+    headers: {
+      'Content-Type' : 'application/json',
+      Authorization: "Bearer " + localStorage.getItem("access"),
+    }
+});
 
   function toggleShow() {
     //manipulate show/hide modal by inverting its current value
@@ -20,11 +29,11 @@ export default function Customers() {
   }
 
   useEffect( () => {
-    //console.log(location);
-    //console.log("loggedin?=",loggedIn);
-  } )
+    request();
+  },[] )
 
-  useEffect(() => {
+
+  /*useEffect(() => {
     //console.log("fetching...");
     const url = baseUrllocal8000 + "api/customers/";
     fetch(url, {
@@ -50,10 +59,18 @@ export default function Customers() {
         setCustomers(data.customer);
       });
   }, []);
+  */
 
   //ADD NEW CUSTOMERS
   function newCustomer(name, industry) {
-    //console.log("adding new customer");
+
+    appendData({name: name, industry: industry});
+
+    if(!errorStatus){
+      toggleShow();
+    }
+
+    /*
     const data = { name: name, industry: industry };
     const url = baseUrllocal8000 + "api/customers/";
 
@@ -81,36 +98,39 @@ export default function Customers() {
       .catch((e) => {
         console.log(e);
       });
+      */
   }
-
-  return (
-    <>
-      {customers ? (
-        <>
-          <h3>Customers page</h3>
-          <ul className="m-3 p-3 rounded border-2 border-solid border-gray-300 w-[300px]">
-            {customers
-              ? customers.map((customer) => {
-                  return (
-                    <li key={uuidv4()}>
-                      <Link
-                        to={"/customers/" + customer.id}
-                        className="no-underline"
-                      >
-                        {customer.name}
-                      </Link>
-                    </li>
-                  );
-                })
-              : null}
-          </ul>
-          <AddCustomer
-            newCustomer={newCustomer}
-            show={show}
-            toggleShow={toggleShow}
-          />
-        </>
-      ) : null}
-    </>
-  );
+  
+  
+return (
+  <>
+    {customer ? (
+      <>
+        <h3>Customers page</h3>
+        <ul className="m-3 p-3 rounded border-2 border-solid border-gray-300 w-[300px]">
+          {customer
+            ? customer.map((customer) => {
+                return (
+                  <li key={uuidv4()}>
+                    <Link
+                      to={"/customers/" + customer.id}
+                      className="no-underline"
+                    >
+                      {customer.name}
+                    </Link>
+                  </li>
+                );
+              })
+            : null}
+        </ul>
+        <AddCustomer
+          newCustomer={newCustomer}
+          show={show}
+          toggleShow={toggleShow}
+        />
+      </>
+    ) : null}
+  </>
+);
+  
 }
